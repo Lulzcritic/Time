@@ -1,0 +1,48 @@
+{% extends 'templates/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+    <div class="col s12"></div>
+    <div class="col s6">
+        <div class="card-panel teal blue-grey lighten-5">
+        
+        <form action="/character/" method="post">
+            <p>
+              <input name="gender" type="radio" id="male" />
+              <label for="male">Homme</label>
+            </p>
+            <p>
+              <input name="gender" type="radio" id="female" />
+              <label for="female">Femme</label>
+            </p>
+            <div class="register_label">Nom du personnage :</div>
+            {{ form.name }}
+            <div class="register_label">Sexe :</div>
+            {{ form.gender }}
+        <input class="btn waves-effect waves-light" type="submit" value="Inscription">
+        
+        {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-error">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-error">
+            <strong>{{ error|escape }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
+    </form>
+    </div>
+        
+        
+    </div>
+    </div>
+</div>
+
+{% endblock %}

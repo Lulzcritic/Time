@@ -6,6 +6,7 @@ from django.views.generic import View
 from forms import RegisterForm
 from forms import ConnexionForm
 from forms import Characterform
+from models import Character
 import time
 from django.db import connection
 from django.contrib.auth import authenticate, login, logout
@@ -69,7 +70,7 @@ class ConnexionView(FormView):
                  # the password verified for the user
                 if user.is_active:
                     login(request, user)
-                    return HttpResponseRedirect('/')
+                    return HttpResponseRedirect('/create_character')
                 else:
                     print("The password is valid, but the account has been disabled!")
             else:
@@ -88,7 +89,7 @@ class DeconnexionView(View):
         return HttpResponseRedirect('/')
         
 class CharacterCreateView(FormView):
-    templates_name = 'templates/Create_Character.html'
+    template_name = 'templates/create_character.html'
     form_class = Characterform
 
     def get(self, request, *args, **kwargs):
@@ -102,8 +103,14 @@ class CharacterCreateView(FormView):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         if form.is_valid():
-            user = User.objects.create_user(name=request.POST['name'],
-                                            gender=request.POST['gender'])
+            b = Character(name=request.post['name'],
+                            gender=request.post['gender'],
+                            stamina=request.post['stamina'],
+                            intelligence=request.post['intelligence'],
+                            strength=request.post['strength'],
+                            social=request.post['social'],
+                            observation=request.post['observation'])
+            b.save()
             return HttpResponseRedirect('/')
             return self.form_valid(form, **kwargs)
         else:

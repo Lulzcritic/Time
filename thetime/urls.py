@@ -11,5 +11,5 @@ urlpatterns = [
     url(r'^register/', RegisterView.as_view(), name='perso'),
     url(r'^connexion/', ConnexionView.as_view(), name='log-in'),
     url(r'^deconnexion/', DeconnexionView.as_view(), name='deconnexion'),
-    url(r'^Create_Character/', CharacterCreateView.as_view(), name='Create_Character')
+    url(r'^create_character/', CharacterCreateView.as_view(), name='create_character')
 ]

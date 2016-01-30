@@ -42,6 +42,9 @@ class Character(models.Model):
     def __str__(self):
         return self.name
 
+    def save(self, *args, **kwargs):
+        super(Character, self).save(*args, **kwargs)
+
 # Create your models here.
 
 
