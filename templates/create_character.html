@@ -8,20 +8,25 @@
     <div class="col s6">
         <div class="card-panel teal blue-grey lighten-5">
         
-        <form action="/character/" method="post">
-            <p>
-              <input name="gender" type="radio" id="male" />
-              <label for="male">Homme</label>
-            </p>
-            <p>
-              <input name="gender" type="radio" id="female" />
-              <label for="female">Femme</label>
-            </p>
+        <form action="/create_character/" method="post">
+            {% csrf_token %}
             <div class="register_label">Nom du personnage :</div>
             {{ form.name }}
-            <div class="register_label">Sexe :</div>
-            {{ form.gender }}
-        <input class="btn waves-effect waves-light" type="submit" value="Inscription">
+            
+            
+            <ul>
+            {% for choice in form.gender.field.choices %}
+              <li>
+                <input type="radio" name="gender" value="{{choice.0}}"
+                  {% ifequal form.gender.data choice.0 %} 
+                     checked="checked"
+                  {% endifequal %}/>
+                <label for="">{{choice.1}}</label>
+              </li>
+            {% endfor %}
+            </ul>
+            
+            
         
         {% if form.errors %}
     {% for field in form %}
