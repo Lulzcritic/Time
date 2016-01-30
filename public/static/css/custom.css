@@ -1,0 +1,29 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background: url("http://i.4cdn.org/wg/1454088204777.jpg");
+    background-repeat:no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+main {
+    flex: 1 0 auto;
+}
+footer {
+    position: relative;
+    bottom: 0px;
+    left:0px;
+    right:0px;
+}
+
+.banner {
+    height: 150px;
+    overflow: hidden;
+}
+
+.banner img {
+    position: relative;
+    top: -820px;
+}

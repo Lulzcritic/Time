@@ -1,0 +1,16 @@
+{% load staticfiles %}
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static "bower_components/Materialize/dist/css/materialize.min.css" %}" type="text/css" />
+    	<script type="text/javascript" src="{% static "bower_components/Materialize/dist/js/materialize.min.js" %}" ></script>
+    	<link rel="stylesheet" href="{% static "css/custom.css" %}" type="text/css" />
+    </head>
+    <body>
+        {% include "templates/header.html" %}
+        
+        {% block content %}
+        {% endblock %}
+        
+        {% include "templates/footer.html" %}
+    </body>
+</html>
