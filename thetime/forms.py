@@ -49,6 +49,8 @@ class Characterform(forms.Form):
         ('opt1', 'Female'),
     )
     gender = forms.ChoiceField(label="Gender", widget=forms.RadioSelect, choices=MY_CHOICES)
+    #gender = forms.MultipleChoiceField(required=False,
+       # widget=forms.CheckboxSelectMultiple, choices=MY_CHOICES)
     name = forms.CharField(max_length=20)
     
     def __init__(self, *args, **kwargs):
@@ -61,7 +63,7 @@ class Characterform(forms.Form):
             raise forms.ValidationError("Le pseudo exists")
         return data
         
-    def gender_choiceseedfefe(self):
+    def gender_choices(self):
         field = self['gender']
         widget = field.field.widget
 

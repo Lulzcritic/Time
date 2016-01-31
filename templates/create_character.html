@@ -13,19 +13,27 @@
             <div class="register_label">Nom du personnage :</div>
             {{ form.name }}
             
-            
             <ul>
-            {% for choice in form.gender.field.choices %}
+            <!--{% for choice in form.gender.field.choices %}
               <li>
-                <input type="radio" name="gender" value="{{choice.0}}"
-                  {% ifequal form.gender.data choice.0 %} 
-                     checked="checked"
-                  {% endifequal %}/>
-                <label for="">{{choice.1}}</label>
+                <input class="whitout-gap" type="radio" name="gender" value="{{choice.0}}"
+                      {% ifequal form.gender.name choice.0 %}
+                         checked="checked"
+                      {% endifequal %}/>
+                
+                <label for="{{choice.0}}">{{choice.1}}</label>
               </li>
+            {% endfor %}-->
+            
+            {% for choice in form.gender.field.choices %}
+            <input name="gender" type="radio" id="{{ choice.0 }}" value="{{ choice.0 }}" />
+            <label for="{{ choice.0 }}">
+            {{ choice.1 }}
+                <span class="radio">{{ choice.1 }}</span>
+            </label>
             {% endfor %}
             </ul>
-            
+            <input class="btn waves-effect waves-light" type="submit" value="Valider">
             
         
         {% if form.errors %}
@@ -41,7 +49,7 @@
             <strong>{{ error|escape }}</strong>
         </div>
     {% endfor %}
-{% endif %}
+    {% endif %}
     </form>
     </div>
         
