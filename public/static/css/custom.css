@@ -27,3 +27,7 @@ footer {
     position: relative;
     top: -820px;
 }
+
+#create_character {
+    margin-top: 50px;
+}

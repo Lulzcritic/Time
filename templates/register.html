@@ -14,8 +14,10 @@
             {{ form.pseudo }}
             <div class="register_label">E-mail :</div>
             {{ form.email }}
-            <div class="register_label">Password :</div>
+            <div class="register_label">Mot de passe :</div>
             {{ form.password }}
+            <div class="register_label">Confirmer le mot de passe :</div>
+            {{ form.confpass }}
         <input class="btn waves-effect waves-light" type="submit" value="Inscription">
         
         {% if form.errors %}

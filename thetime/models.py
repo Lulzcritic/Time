@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta
 
 class Territory(models.Model):
     name = models.CharField(max_length=50)
@@ -25,7 +26,7 @@ class Character(models.Model):
     name = models.CharField(max_length=50)
     gender = models.CharField(max_length=50)
     age = models.IntegerField(default=18)
-    time = models.CharField(max_length=50)
+    time = models.DateTimeField(default=datetime.now()+timedelta(days=7))
     pa = models.IntegerField(default=0)
     role = models.CharField(max_length=50)
     

@@ -4,13 +4,14 @@
 
   <nav>
     <div class="nav-wrapper blue-grey darken-4 z-depth-3">
-      <a href="https://time-project-d3falt.c9users.io/" class="brand-logo">Tempium</a>
+      <a href="https://time-project-d3falt.c9users.io/" class="brand-logo center">Tempium</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         {% if user.is_authenticated %}
         <li>
           Bonjour, {{ user.username }}
         </li>
-        <li><a class="waves-effect waves-light btn" href="https://time-project-d3falt.c9users.io/deconnexion">log-out</a></li>
+        <li><a href="https://time-project-d3falt.c9users.io/dashboard">Dashboard</a></li>
+        <li><a href="https://time-project-d3falt.c9users.io/deconnexion">log-out</a></li>
         {% else %}
         <iframe width="1" height="1" src="https://www.youtue.com/embed/Zy00_VUgsCA?rel=0&amp;controls=0&autoplay=true" frameborder="0" allowfullscreen></iframe>
         <li><a href="https://time-project-d3falt.c9users.io/register">Register</a></li>

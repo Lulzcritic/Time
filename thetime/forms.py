@@ -8,27 +8,26 @@ class RegisterForm(forms.Form):
     pseudo = forms.CharField(max_length=20)
     password = forms.CharField(widget=forms.PasswordInput())
     email = forms.EmailField(max_length=50)
-    
-    def clean_pseudo(self):
-        data = self.cleaned_data['pseudo']
-        if User.objects.filter(username=data).exists():
-            raise forms.ValidationError("Le pseudo existe deja nique ta mere")
-        if len(data) < 5:
-            raise forms.ValidationError("La longueur de votre pseudo doit etre comprise entre 3 et 15 caracteres")
-        return data
+    confpass = forms.CharField(widget=forms.PasswordInput())
 
-    def clean_password(self):
-        data = self.cleaned_data['password']
-        if len(data) < 5:
+    def clean(self):
+        cleaned_data = super(RegisterForm, self).clean()
+        pseudo = cleaned_data.get("pseudo")
+        password = cleaned_data.get("password")
+        email = cleaned_data.get("email")
+        confpass = cleaned_data.get("confpass")
+        if User.objects.filter(username=pseudo).exists():
+            raise forms.ValidationError("Le pseudo existe deja nique ta mere")
+        if len(pseudo) < 5:
+            raise forms.ValidationError("La longueur de votre pseudo doit etre comprise entre 3 et 15 caracteres")
+        if len(password) < 5:
             raise forms.ValidationError("La longueur de votre mot de passe doit etre comprise entre 8 et 32 caracteres")
-        return data
-        
-    def clean_email(self):
-        data = self.cleaned_data['email']
-        if User.objects.filter(email=data).exists():
+        if User.objects.filter(email=email).exists():
             raise forms.ValidationError("L'email existe deja")
-        return data
-        
+        if password != confpass:
+            raise forms.ValidationError("Mot de passe differrent")
+        return cleaned_data
+
 class ConnexionForm(forms.Form):
     pseudo = forms.CharField(max_length=20)
     password = forms.CharField(widget=forms.PasswordInput())
@@ -45,12 +44,10 @@ class ConnexionForm(forms.Form):
         
 class Characterform(forms.Form):
     MY_CHOICES = (
-        ('opt0', 'Male'),
-        ('opt1', 'Female'),
+        ('male', 'Homme'),
+        ('female', 'Femme'),
     )
     gender = forms.ChoiceField(label="Gender", widget=forms.RadioSelect, choices=MY_CHOICES)
-    #gender = forms.MultipleChoiceField(required=False,
-       # widget=forms.CheckboxSelectMultiple, choices=MY_CHOICES)
     name = forms.CharField(max_length=20)
     
     def __init__(self, *args, **kwargs):

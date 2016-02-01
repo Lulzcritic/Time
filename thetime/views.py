@@ -7,8 +7,11 @@ from forms import RegisterForm
 from forms import ConnexionForm
 from forms import Characterform
 from models import Character
+from datetime import datetime, timedelta
 import time
 from django.db import connection
+from django.utils.timezone import utc
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
@@ -93,6 +96,9 @@ class CharacterCreateView(FormView):
     form_class = Characterform
 
     def get(self, request, *args, **kwargs):
+        user = request.user
+        if hasattr(user, 'character') == True:
+            return HttpResponseRedirect('/dashboard')
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         context = self.get_context_data(**kwargs)
@@ -110,3 +116,14 @@ class CharacterCreateView(FormView):
             return self.form_valid(form, **kwargs)
         else:
             return self.form_invalid(form, **kwargs)
+            
+class DashboardView(View):
+    template_name = 'templates/dashboard.html'
+    
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        time = user.character.time.replace(tzinfo=None) - datetime.now().replace(tzinfo=None)
+        time = str(time.days) + " jours " + str(time.seconds//3600) + " heures " + str(time.seconds//60%60) + " minutes " + str(time.seconds%60) + " secondes "
+        context = {}
+        context["time"] = time;
+        return render(request, self.template_name, context)
