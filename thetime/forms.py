@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from models import Character
 from models import Syndicat
+from models import Role
 from django.contrib.auth import authenticate, login, logout
 
 class RegisterForm(forms.Form):
@@ -99,4 +100,18 @@ class SyndicatDashboardForm(forms.Form):
     
     def clean_name(self):
         data = self.cleaned_data['name']
+        return data
+        
+class SelectRoleForm(forms.Form):
+    name = forms.CharField(max_length=20)
+    
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        return data
+        
+class WorkPageForm(forms.Form):
+    hour = forms.IntegerField()
+    
+    def clean_hour(self):
+        data = self.cleaned_data['hour']
         return data

@@ -5,21 +5,25 @@
 <div class="container">
     <div class="row" id="create_character">
         <div class="col s8">
-            <div class="card blue-grey darken-1">
+            <div class="card teal blue-grey darken-5">
                 <div class="card-content white-text">
                     <p>{{ time }} / inventaire/ etat</p>
                 </div>
             </div>
         </div>
         <div class="col s4">
-            <div class="card blue-grey darken-1">
+            <div class="card teal blue-grey darken-5">
                 <div class="card-content white-text">
+                    {% if pending == "PAYDAY" %}
+                    <button class="btn waves-effect waves-light" href="https://time-project-d3falt.c9users.io/add_time"></button>
+                    {% else %}
                     <p>Activité en cours: {{ pending }}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
         <div class="col s4">
-            <div class="card-panel teal blue-grey darken-1">
+            <div class="card-panel teal blue-grey darken-5">
                 <div class="card-content white-text">
                     <p>Citoyen Tempium: {{ name }}</p>
                     <p>Job :  {{ role }}</p>
@@ -53,9 +57,7 @@
             {% endif %}
         </div>
         <div class="col s4">
-            <div class="my_ul">
-                <ul>
-                    
+
                     <div class="card-panel grey lighten-5 z-depth-1">
                       <div class="row valign-wrapper">
                         <div class="col s2">
@@ -63,52 +65,91 @@
                         </div>
                         <div class="col s10">
                           <span class="black-text">
-                            <center>Gagner de l'argent et de l'expérience
-                            <a href="" class="btn waves-effect waves-light">Travailler</a>
+                            <center>Gagner de l'argent et de l'expérience<br><br>
+                            <a href="https://time-project-d3falt.c9users.io/select_role" class="btn waves-effect waves-light">Travailler</a>
                             </center>
                           </span>
                         </div>
                       </div>
                     </div>
                     
-                     <div class="card-panel grey lighten-5 z-depth-1">
+                    <div class="card-panel grey lighten-5 z-depth-1">
                       <div class="row valign-wrapper">
                         <div class="col s2">
-                          <img src="http://www.iconarchive.com/download/i99498/webalys/kameleon.pics/Road-Worker-1.ico" alt="" class="responsive-img"> <!-- notice the "circle" class -->
+                          <img src="http://simpleicon.com/wp-content/uploads/map-7.png" alt="" class="responsive-img"> <!-- notice the "circle" class -->
                         </div>
                         <div class="col s10">
                           <span class="black-text">
-                            This is a square image. Add the "circle" class to it to make it appear circular.
+                            <center>Carte du monde<br><br>
+                            <a href="" class="btn waves-effect waves-light">Map</a>
+                            </center>
                           </span>
                         </div>
                       </div>
                     </div>
                     
-                    
-                    <li>
-                        <span class="title"><a href="">Map</span>
-                    </li>
-                    </a>
-                    <li>
-                        <span class="title">Marché</span>
-                    </li>
-                </ul>
-            </div>
+                    <div class="card-panel grey lighten-5 z-depth-1">
+                      <div class="row valign-wrapper">
+                        <div class="col s2">
+                          <img src="https://cdn3.iconfinder.com/data/icons/e-commerce-trading/512/retail-512.png" alt="" class="responsive-img"> <!-- notice the "circle" class -->
+                        </div>
+                        <div class="col s10">
+                          <span class="black-text">
+                            <center>Accédez au marché<br><br>
+                            <a href="" class="btn waves-effect waves-light">Marché</a>
+                            </center>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
         </div>
         <div class="col s4">
-            <div class="my_ul">
-                <ul>
-                    <li>
-                        <span class="title">Marché noir</span>
-                    </li>
-                    <li>
-                        <span class="title">Bourse</span>
-                    </li>
-                    <li>
-                        <span class="title">Capitol</span>
-                    </li>
-                </ul>
+            
+            <div class="card-panel grey lighten-5 z-depth-1">
+                <div class="row valign-wrapper">
+                    <div class="col s2">
+                        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/148944-84.png" alt="" class="responsive-img"> <!-- notice the "circle" class -->
+                    </div>
+                    <div class="col s10">
+                        <span class="black-text">
+                            <center>Accédez au marché noir<br><br>
+                            <a href="" class="btn waves-effect waves-light">Marché noir</a>
+                            </center>
+                        </span>
+                    </div>
+                </div>
             </div>
+            
+            <div class="card-panel grey lighten-5 z-depth-1">
+                <div class="row valign-wrapper">
+                    <div class="col s2">
+                        <img src="https://cdn4.iconfinder.com/data/icons/medical-icons-normal-vector/1250/path_financial-512.png" alt="" class="responsive-img"> <!-- notice the "circle" class -->
+                    </div>
+                    <div class="col s10">
+                        <span class="black-text">
+                            <center>Suivez le cours de la bourse<br><br>
+                            <a href="" class="btn waves-effect waves-light">Bourse</a>
+                            </center>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-panel grey lighten-5 z-depth-1">
+                <div class="row valign-wrapper">
+                    <div class="col s2">
+                        <img src="http://www.tshirtangels.com/image.aspx?src=gfx/prints/transparent/blackfist.png&w=300&h=300&q=95&bg=%23FFFFFF" alt="" class="responsive-img"> <!-- notice the "circle" class -->
+                    </div>
+                    <div class="col s10">
+                        <span class="black-text">
+                            <center>Evenements politique<br><br>
+                            <a href="" class="btn waves-effect waves-light">Politique</a>
+                            </center>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
 </div>

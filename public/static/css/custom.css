@@ -25,21 +25,3 @@ main {
 #create_character {
     margin-top: 50px;
 }
-
-.my_ul ul li {
-    /*background: url("http://imagizer.imageshack.us/a/img921/5955/9uJmyQ.jpg");*/
-    background-size: cover;
-    height: 15%;
-    margin-top: 0px;
-    border-style: top solid;
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-}
-
-.my_ul ul a{
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-}

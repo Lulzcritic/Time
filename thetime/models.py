@@ -2,6 +2,18 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 
+class Role(models.Model):
+    name = models.CharField(max_length=50)
+    first_stat = models.CharField(max_length=50)
+    second_stat = models.CharField(max_length=50)
+    pay = models.IntegerField(default=0)
+    
+    def __str__(self):
+        return self.name
+        
+    def save(self, *args, **kwargs):
+        super(Role, self).save(*args, **kwargs)
+
 class Territory(models.Model):
     name = models.CharField(max_length=50)
     ressource_type = models.CharField(max_length=50)
@@ -13,10 +25,13 @@ class Territory(models.Model):
     
     def __str__(self):
         return self.name
+        
+    def save(self, *args, **kwargs):
+        super(Syndicat, self).save(*args, **kwargs)
 
 class Syndicat(models.Model):
     name = models.CharField(max_length=50)
-    banque = models.IntegerField(default=0)
+    banque = models.DateTimeField(default=datetime.now())
     niveau = models.IntegerField(default=1)
     membres = models.IntegerField(default=1)
     president = models.OneToOneField('Character', on_delete=models.CASCADE, related_name="syndicat_president")
@@ -34,8 +49,9 @@ class Character(models.Model):
     time = models.DateTimeField(default=datetime.now()+timedelta(days=7))
     pa = models.IntegerField(default=0)
     role = models.CharField(max_length=50, default="Rien")
-    pending = models.CharField(max_length=50, default="Rien")
+    role_bool = models.BooleanField(default=False)
     d_pending = models.DateTimeField(default=datetime.now())
+    pay = models.IntegerField(default=0)
     
     # Stats
     stamina = models.IntegerField(default=0)

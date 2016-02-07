@@ -9,6 +9,9 @@ from views import DashboardView
 from views import CreateSyndicatView
 from views import SelectSyndicatView
 from views import SyndicatDashboardView
+from views import SelectRoleView
+from views import WorkPageView
+from views import AddTimeView
 
 urlpatterns = [
     url(r'^$', Home.as_view(), name='index'),
@@ -19,5 +22,8 @@ urlpatterns = [
     url(r'^dashboard/', DashboardView.as_view(), name='dashboard'),
     url(r'^create_syndicat/', CreateSyndicatView.as_view(), name='create_syndicat'),
     url(r'^select_syndicat/', SelectSyndicatView.as_view(), name='select_syndicat'),
-    url(r'^dashboard_syndicat/', SyndicatDashboardView.as_view(), name='dashboard_syndicat')
+    url(r'^dashboard_syndicat/', SyndicatDashboardView.as_view(), name='dashboard_syndicat'),
+    url(r'^select_role/', SelectRoleView.as_view(), name='select_role'),
+    url(r'^workpage/', WorkPageView.as_view(), name='workpage'),
+    url(r'^add_time/', AddTimeView.as_view(), name='add_time')
 ]
