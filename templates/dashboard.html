@@ -4,9 +4,110 @@
 
 <div class="container">
     <div class="row" id="create_character">
-        <div class="card blue-grey darken-1">
-            <div class="card-content white-text">
-                <p>{{ time }}</p>
+        <div class="col s8">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <p>{{ time }} / inventaire/ etat</p>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <p>Activité en cours: {{ pending }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="card-panel teal blue-grey darken-1">
+                <div class="card-content white-text">
+                    <p>Citoyen Tempium: {{ name }}</p>
+                    <p>Job :  {{ role }}</p>
+                    <p>Compétences :</p>
+                    <p>Stamina : {{ stamina }}</p>
+                    <p>Intelligence : {{ intelligence }}</p>
+                    <p>Strength : {{ strength }}</p>
+                    <p>Social : {{ social }}</p>
+                    <p>Observation : {{ observation }}</p>
+                    <p>Syndicat : {{ syndicat }}</p>
+                </div>
+            </div>
+            {% if user.character.syndicat == None %}
+            <div class="card-panel teal blue-grey darken-1">
+                <div class="card-content white-text">
+                    <center>
+                    <a href="https://time-project-d3falt.c9users.io/select_syndicat" class="btn waves-effect waves-light">Rejoindre un syndicat</a>
+                    <br><br> OU <br><br>
+                    <a href="https://time-project-d3falt.c9users.io/create_syndicat" class="btn waves-effect waves-light">Créer un syndicat</a>
+                    </center>
+                </div>
+            </div>
+            {% else %}
+            <div class="card-panel teal blue-grey darken-1">
+                <div class="card-content white-text">
+                    <center><h5>Syndicat</h5>
+                    <a href="https://time-project-d3falt.c9users.io/dashboard_syndicat" class="btn waves-effect waves-light">Quartier général</a>
+                    </center>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col s4">
+            <div class="my_ul">
+                <ul>
+                    
+                    <div class="card-panel grey lighten-5 z-depth-1">
+                      <div class="row valign-wrapper">
+                        <div class="col s2">
+                          <img src="https://cdn0.iconfinder.com/data/icons/simple-seo-and-internet-icons/512/support_settings_maintanance-512.png" alt="" class="responsive-img"> <!-- notice the "circle" class -->
+                        </div>
+                        <div class="col s10">
+                          <span class="black-text">
+                            <center>Gagner de l'argent et de l'expérience
+                            <a href="" class="btn waves-effect waves-light">Travailler</a>
+                            </center>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                     <div class="card-panel grey lighten-5 z-depth-1">
+                      <div class="row valign-wrapper">
+                        <div class="col s2">
+                          <img src="http://www.iconarchive.com/download/i99498/webalys/kameleon.pics/Road-Worker-1.ico" alt="" class="responsive-img"> <!-- notice the "circle" class -->
+                        </div>
+                        <div class="col s10">
+                          <span class="black-text">
+                            This is a square image. Add the "circle" class to it to make it appear circular.
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    
+                    <li>
+                        <span class="title"><a href="">Map</span>
+                    </li>
+                    </a>
+                    <li>
+                        <span class="title">Marché</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col s4">
+            <div class="my_ul">
+                <ul>
+                    <li>
+                        <span class="title">Marché noir</span>
+                    </li>
+                    <li>
+                        <span class="title">Bourse</span>
+                    </li>
+                    <li>
+                        <span class="title">Capitol</span>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

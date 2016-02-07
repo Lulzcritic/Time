@@ -17,10 +17,15 @@ class Territory(models.Model):
 class Syndicat(models.Model):
     name = models.CharField(max_length=50)
     banque = models.IntegerField(default=0)
+    niveau = models.IntegerField(default=1)
+    membres = models.IntegerField(default=1)
     president = models.OneToOneField('Character', on_delete=models.CASCADE, related_name="syndicat_president")
     
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        super(Syndicat, self).save(*args, **kwargs)
 
 class Character(models.Model):
     name = models.CharField(max_length=50)
@@ -28,7 +33,9 @@ class Character(models.Model):
     age = models.IntegerField(default=18)
     time = models.DateTimeField(default=datetime.now()+timedelta(days=7))
     pa = models.IntegerField(default=0)
-    role = models.CharField(max_length=50)
+    role = models.CharField(max_length=50, default="Rien")
+    pending = models.CharField(max_length=50, default="Rien")
+    d_pending = models.DateTimeField(default=datetime.now())
     
     # Stats
     stamina = models.IntegerField(default=0)

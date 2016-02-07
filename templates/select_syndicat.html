@@ -1,0 +1,25 @@
+{% extends 'templates/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row" id="create_character">
+        <div class="col s12">
+            <ul class="collection with-header">
+                <li class="collection-header"><h4>Liste des syndicat</h4></li>
+                <form action="/select_syndicat/" method="post">
+                    {% for n in syndicat %}
+                    <li class="collection-item">
+                        <div>
+                            {{ n.name }} Membres : {{ n.membres }} niveau : {{ n.niveau }}
+                                {% csrf_token %}
+                                <div class="register_label">Nom du syndicat :</div>
+                                <button type="submit" name="name" value="{{ n.name }}">Rejoindre</button>
+                        </div>
+                    </li>
+                    {% endfor %} 
+                </form>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

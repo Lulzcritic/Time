@@ -2,6 +2,7 @@ from django import forms
 from django.db import models
 from django.contrib.auth.models import User
 from models import Character
+from models import Syndicat
 from django.contrib.auth import authenticate, login, logout
 
 class RegisterForm(forms.Form):
@@ -17,11 +18,11 @@ class RegisterForm(forms.Form):
         email = cleaned_data.get("email")
         confpass = cleaned_data.get("confpass")
         if User.objects.filter(username=pseudo).exists():
-            raise forms.ValidationError("Le pseudo existe deja nique ta mere")
+            raise forms.ValidationError("Le pseudo existe")
         if len(pseudo) < 5:
-            raise forms.ValidationError("La longueur de votre pseudo doit etre comprise entre 3 et 15 caracteres")
+            raise forms.ValidationError("La longueur de votre pseudo doit etre comprise entre 5 et 15 caracteres")
         if len(password) < 5:
-            raise forms.ValidationError("La longueur de votre mot de passe doit etre comprise entre 8 et 32 caracteres")
+            raise forms.ValidationError("La longueur de votre mot de passe doit etre comprise entre 5 et 32 caracteres")
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("L'email existe deja")
         if password != confpass:
@@ -72,3 +73,30 @@ class Characterform(forms.Form):
         name = field.html_name
 
         return widget.get_renderer(name, field.value(), attrs=attrs)
+        
+class SyndicatForm(forms.Form):
+    name = forms.CharField(max_length=20)
+
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        if len(data) < 5:
+            raise forms.ValidationError("Nom du syndicat trop court")
+        if len(data) > 20:
+            raise forms.ValidationError("Nom du syndicat trop long")
+        if Syndicat.objects.filter(name=data).exists() == True:
+            raise forms.ValidationError("Le nom du syndicat exits")
+        return data
+        
+class SelectSyndicatForm(forms.Form):
+    name = forms.CharField(max_length=20)
+    
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        return data
+        
+class SyndicatDashboardForm(forms.Form):
+    name = forms.CharField(max_length=20)
+    
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        return data
