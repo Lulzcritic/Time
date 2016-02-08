@@ -139,6 +139,53 @@ class AddTimeView(View):
             return HttpResponseRedirect('/dashboard')
         if user.character.d_pending.replace(tzinfo=None) > datetime.now().replace(tzinfo=None):
             return HttpResponseRedirect('/dashboard')
+        role = Role.objects.get(name=user.character.role)
+        character.role_exp = character.role_exp + character.pay
+        stat1 = 0
+        stat2 = 0
+        if role.first_stat == "intelligence":
+            stat1 = character.intelligence
+            if character.role_exp > 10:
+                character.intelligence = character.intelligence + 1
+        if role.first_stat == "stamina":
+            stat1 = character.stamina
+            if character.role_exp > 10:
+                character.stamina = character.stamina + 1
+        if role.first_stat == "strenght":
+            stat1 = character.strenght
+            if character.role_exp > 10:
+                character.strenght = character.strenght + 1
+        if role.first_stat == "observation":
+            stat1 = character.observation
+            if character.role_exp > 10:
+                character.observation = character.observation + 1
+        if role.first_stat == "social":
+            stat1 = character.social
+            if character.role_exp > 10:
+                character.social = character.social + 1
+        if role.second_stat == "intelligence":
+            stat2 = character.intelligence
+            if character.role_exp > 10:
+                character.intelligence = character.intelligence + 1
+        if role.second_stat == "stamina":
+            stat2 = character.stamina
+            if character.role_exp > 10:
+                character.stamina = character.stamina + 1
+        if role.second_stat == "strenght":
+            stat2 = character.strenght
+            if character.role_exp > 10:
+                character.strenght = character.strenght + 1
+        if role.second_stat == "observation":
+            stat2 = character.observation
+            if character.role_exp > 10:
+                character.observation = character.observation + 1
+        if role.second_stat == "social":
+            stat2 = character.social
+            if character.role_exp > 10:
+                character.social = character.social + 1
+        if character.role_exp > 10:
+                character.role_exp = 0
+        character.pay = character.pay * role.pay + ((role.pay * 16 / 100) * stat1) + ((role.pay * 6 / 100) * stat2)
         character.time = character.time.replace(tzinfo=None) + timedelta(minutes = character.pay)
         character.role_bool = False
         character.save()
@@ -151,8 +198,11 @@ class DashboardView(View):
         user = request.user
         if hasattr(user, 'character') == False:
             return HttpResponseRedirect('/')
-        time = user.character.time.replace(tzinfo=None) - datetime.now().replace(tzinfo=None)
-        time = str(time.days) + " jours " + str(time.seconds//3600) + " heures " + str(time.seconds//60%60) + " minutes " + str(time.seconds%60) + " secondes "
+        if user.character.time.replace(tzinfo=None) > datetime.now().replace(tzinfo=None):
+            time = user.character.time.replace(tzinfo=None) - datetime.now().replace(tzinfo=None)
+            time = str(time.days) + " jours " + str(time.seconds//3600) + " heures " + str(time.seconds//60%60) + " minutes " + str(time.seconds%60) + " secondes "
+        else:
+            time = "DEAD"
         if user.character.role_bool == True:
             if user.character.d_pending.replace(tzinfo=None) > datetime.now().replace(tzinfo=None):
                 pending = user.character.d_pending.replace(tzinfo=None) - datetime.now().replace(tzinfo=None)
@@ -280,32 +330,19 @@ class WorkPageView(FormView):
             user = request.user
             role = Role.objects.get(name=user.character.role)
             character = Character.objects.get(name=user.character.name)
+            if int(request.POST['hour']) == -2:
+                character.role_bool = False
+                character.role = "Rien"
+                character.save()
+                return HttpResponseRedirect('/dashboard')
+            if character.role_bool == True:
+                character.role_bool = False
+                character.save()
+                return HttpResponseRedirect('/dashboard')
             character.role_bool = True
             time = int(request.POST['hour'])
             character.d_pending = datetime.now().replace(tzinfo=None) + timedelta(hours = time)
-            stat1 = 0
-            stat2 = 0
-            if role.first_stat == "intelligence":
-                stat1 = character.intelligence
-            if role.first_stat == "stamina":
-                stat1 = character.stamina
-            if role.first_stat == "strenght":
-                stat1 = character.strenght
-            if role.first_stat == "observation":
-                stat1 = character.observation
-            if role.first_stat == "social":
-                stat1 = character.social
-            if role.second_stat == "intelligence":
-                stat2 = character.intelligence
-            if role.second_stat == "stamina":
-                stat2 = character.stamina
-            if role.second_stat == "strenght":
-                stat2 = character.strenght
-            if role.second_stat == "observation":
-                stat2 = character.observation
-            if role.second_stat == "social":
-                stat2 = character.social
-            character.pay = time * role.pay + ((role.pay * 16 / 100) * stat1) + ((role.pay * 6 / 100) * stat2)
+            character.pay = time
             character.save()
             return HttpResponseRedirect('/dashboard')
             return self.form_valid(form, **kwargs)

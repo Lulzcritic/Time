@@ -6,6 +6,8 @@ class Role(models.Model):
     name = models.CharField(max_length=50)
     first_stat = models.CharField(max_length=50)
     second_stat = models.CharField(max_length=50)
+    min_first = models.IntegerField(default=0)
+    min_second = models.IntegerField(default=0)
     pay = models.IntegerField(default=0)
     
     def __str__(self):
@@ -50,6 +52,7 @@ class Character(models.Model):
     pa = models.IntegerField(default=0)
     role = models.CharField(max_length=50, default="Rien")
     role_bool = models.BooleanField(default=False)
+    role_exp = models.IntegerField(default=0)
     d_pending = models.DateTimeField(default=datetime.now())
     pay = models.IntegerField(default=0)
     

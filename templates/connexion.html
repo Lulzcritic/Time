@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row">
     <div class="col s12"></div>
-    <div class="col s6">
+    <div class="col s6" id="create_character">
     {% if user.is_authenticated %}
     Vous etes connecté, {{ user.username }} !
     {% else %}
@@ -39,7 +39,7 @@
         
         
     </div>
-    <div class="col s6">
+    <div class="col s6 white-text">
         <h1>Inscription gratuite !</h1>
         <p>Inscrivez-vous et commencez à jouer</p>
     </div>
