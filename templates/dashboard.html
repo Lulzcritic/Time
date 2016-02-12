@@ -7,7 +7,7 @@
         <div class="col s8">
             <div class="card teal blue-grey darken-5">
                 <div class="card-content white-text">
-                    <p>{{ time }} / inventaire/ etat</p>
+                    <p class="center-align">{{ time }} / inventaire/ {{ etat }}</p>
                 </div>
             </div>
         </div>
@@ -26,16 +26,27 @@
             </div>
         </div>
         <div class="col s4">
-            <div class="card-panel teal blue-grey darken-5">
-                <div class="card-content white-text">
+            <div class="card trensparent">
+                <div class="card-content white-text blue-grey darken-4">
                     <p>Citoyen Tempium: {{ name }}</p>
                     <p>Job :  {{ role }}</p>
-                    <p>Compétences :</p>
+                </div>
+                <div class="card-action black-text">
+                    <h5 class="center">Compétences</h5>
                     <p>Stamina : {{ stamina }}</p>
+                    
                     <p>Intelligence : {{ intelligence }}</p>
                     <p>Strength : {{ strength }}</p>
                     <p>Social : {{ social }}</p>
                     <p>Observation : {{ observation }}</p>
+                </div>
+                <div class="card-action black-text trensparent">
+                    <h5 class="center">Expérience de travail</h5>
+                    <div class="progress">
+                        <div class="determinate" style="width: {{ xp }}%"></div>
+                    </div>
+                </div>
+                <div class="card-action white-text blue-grey darken-4">
                     <p>Syndicat : {{ syndicat }}</p>
                 </div>
             </div>

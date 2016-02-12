@@ -145,45 +145,45 @@ class AddTimeView(View):
         stat2 = 0
         if role.first_stat == "intelligence":
             stat1 = character.intelligence
-            if character.role_exp > 10:
-                character.intelligence = character.intelligence + 1
+            if character.role_exp >= 12:
+                character.intelligence = character.intelligence + 2
         if role.first_stat == "stamina":
             stat1 = character.stamina
-            if character.role_exp > 10:
-                character.stamina = character.stamina + 1
-        if role.first_stat == "strenght":
-            stat1 = character.strenght
-            if character.role_exp > 10:
-                character.strenght = character.strenght + 1
+            if character.role_exp >= 12:
+                character.stamina = character.stamina + 2
+        if role.first_stat == "strength":
+            stat1 = character.strength
+            if character.role_exp >= 12:
+                character.strength = character.strength + 2
         if role.first_stat == "observation":
             stat1 = character.observation
-            if character.role_exp > 10:
-                character.observation = character.observation + 1
+            if character.role_exp >= 12:
+                character.observation = character.observation + 2
         if role.first_stat == "social":
             stat1 = character.social
-            if character.role_exp > 10:
-                character.social = character.social + 1
+            if character.role_exp >= 12:
+                character.social = character.social + 2
         if role.second_stat == "intelligence":
             stat2 = character.intelligence
-            if character.role_exp > 10:
+            if character.role_exp >= 12:
                 character.intelligence = character.intelligence + 1
         if role.second_stat == "stamina":
             stat2 = character.stamina
-            if character.role_exp > 10:
+            if character.role_exp >= 12:
                 character.stamina = character.stamina + 1
-        if role.second_stat == "strenght":
-            stat2 = character.strenght
-            if character.role_exp > 10:
-                character.strenght = character.strenght + 1
+        if role.second_stat == "strength":
+            stat2 = character.strength
+            if character.role_exp >= 12:
+                character.strength = character.strength + 1
         if role.second_stat == "observation":
             stat2 = character.observation
-            if character.role_exp > 10:
+            if character.role_exp >= 12:
                 character.observation = character.observation + 1
         if role.second_stat == "social":
             stat2 = character.social
-            if character.role_exp > 10:
+            if character.role_exp >= 12:
                 character.social = character.social + 1
-        if character.role_exp > 10:
+        if character.role_exp >= 12:
                 character.role_exp = 0
         character.pay = character.pay * role.pay + ((role.pay * 16 / 100) * stat1) + ((role.pay * 6 / 100) * stat2)
         character.time = character.time.replace(tzinfo=None) + timedelta(minutes = character.pay)
@@ -211,6 +211,10 @@ class DashboardView(View):
                 pending = "PAYDAY"
         else:
             pending = "Aucun"
+        character = Character.objects.get(name=user.character.name)
+        if (character.hungry.replace(tzinfo=None) - datetime.now().replace(tzinfo=None)) > timedelta(days=1):
+            character.state = "Faim"
+            character.save()
         context = {}
         context["role"] = user.character.role
         context["pending"] = pending
@@ -222,6 +226,8 @@ class DashboardView(View):
         context["observation"] = user.character.observation
         context["name"] = user.character.name
         context["syndicat"] = user.character.syndicat
+        context["etat"] = user.character.state
+        context["xp"] = 100 * user.character.role_exp / 12
         return render(request, self.template_name, context)
         
 class CreateSyndicatView(FormView):
@@ -318,6 +324,8 @@ class WorkPageView(FormView):
     def get(self, request, *args, **kwargs):
         user = request.user
         context = {}
+        if user.character.state != "Aucun":
+            return HttpResponseRedirect('/dashboard')
         if user.character.role == "Rien":
             return HttpResponseRedirect('/dashboard')
         context["character"] = user.character
@@ -356,8 +364,14 @@ class SelectRoleView(FormView):
     def get(self, request, *args, **kwargs):
         user = request.user
         context = {}
+        if user.character.state != "Aucun":
+            return HttpResponseRedirect('/dashboard')
         if user.character.role != "Rien":
             return HttpResponseRedirect('/workpage')
+        context["stat_role"] = ["stamina", "intelligence", "strength", "social", "observation"]
+        context["stat_charaEERE"] = [user.character.stamina, user.character.intelligence, user.character.strength, user.character.social, user.character.observation]
+        #context["stat_chara"] = [user.character.stamina, user.character.intelligence, user.character.strength, user.character.social, user.character.observation]
+        context["stat_chara"] = [("stamina", user.character.stamina), ("intelligence", user.character.intelligence), ("strength", user.character.strength), ("social", user.character.social), ("observation", user.character.observation)]
         context["role"] = Role.objects.all()
         return render(request, self.template_name, context)
         

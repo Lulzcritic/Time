@@ -3,8 +3,8 @@
 {% block content %}
 <div class="container">
     <div class="row" id="create_character">
-        <div class="col s12">
-                <h1 class="">Liste des syndicat</h1>
+        <div class="col s6 offset-s3">
+                <h1 class="center-align white-text">Liste des syndicat</h1>
                 <form action="/select_syndicat/" method="post">
                     {% for n in syndicat %}
                     {% csrf_token %}

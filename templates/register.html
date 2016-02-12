@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container">
-    <div class="row">
+    <div class="row" id="create_character">
     <div class="col s12"></div>
     <div class="col s6">
         <div class="card-panel teal blue-grey lighten-5">
@@ -18,7 +18,7 @@
             {{ form.password }}
             <div class="register_label">Confirmer le mot de passe :</div>
             {{ form.confpass }}
-        <input class="btn waves-effect waves-light" type="submit" value="Inscription">
+        <button class="btn waves-effect waves-light" type="submit" value="Inscription">Inscription</button>
         
         {% if form.errors %}
     {% for field in form %}
@@ -39,7 +39,7 @@
         
         
     </div>
-    <div class="col s6">
+    <div class="col s6 white-text">
         <h1>Inscription gratuite !</h1>
         <p>Inscrivez-vous et commencez à jouer</p>
     </div>
