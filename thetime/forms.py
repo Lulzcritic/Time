@@ -115,3 +115,32 @@ class WorkPageForm(forms.Form):
     def clean_hour(self):
         data = self.cleaned_data['hour']
         return data
+        
+class MarketForm(forms.Form):
+    nb = forms.IntegerField()
+    obj = forms.IntegerField()
+    
+    def clean_nb(self):
+        data = self.cleaned_data['nb']
+        return data
+        
+    def clean_obj(self):
+        data = self.cleaned_data['obj']
+        return data
+        
+class SellForm(forms.Form):
+    nb = forms.IntegerField()
+    obj = forms.IntegerField()
+    price = forms.IntegerField()
+
+    def clean_nb(self):
+        data = self.cleaned_data['nb']
+        return data
+        
+    def clean_obj(self):
+        data = self.cleaned_data['obj']
+        return data
+    
+    def clean_price(self):
+        data = self.cleaned_data['price']
+        return data

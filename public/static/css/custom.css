@@ -19,7 +19,8 @@ main {
 
 .banner img {
     position: relative;
-    top: -820px;
+    top: -210px;
+    background-size: cover;
 }
 
 #create_character {

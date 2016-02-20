@@ -1,5 +1,5 @@
 <div class="banner">
-  <img src="http://i.4cdn.org/wg/1453912846017.jpg"></img>
+  <img src="http://i.4cdn.org/wg/1455386557668.jpg"></img>
 </div>
 
   <nav>
@@ -10,7 +10,11 @@
         <li>
           Bonjour, {{ user.username }}
         </li>
-        <li><a href="https://time-project-d3falt.c9users.io/dashboard">Dashboard</a></li>
+        {% if user.character %}
+          <li><a href="https://time-project-d3falt.c9users.io/dashboard">Dashboard</a></li>
+        {% else %}
+          <li><a href="https://time-project-d3falt.c9users.io/create_character">Create Character</a></li>
+        {% endif %}
         <li><a href="https://time-project-d3falt.c9users.io/deconnexion">log-out</a></li>
         {% else %}
         <iframe width="1" height="1" src="https://www.youtue.com/embed/Zy00_VUgsCA?rel=0&amp;controls=0&autoplay=true" frameborder="0" allowfullscreen></iframe>

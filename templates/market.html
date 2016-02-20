@@ -1,0 +1,31 @@
+{% extends 'templates/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+    <h1 class="white-text center-align">Market</h1>
+    {% for n in objet %}
+    {% if n.character.name != user.character.name %}
+        <div class="col s12">
+            <div class="card-panel teal blue-grey lighten-5 center-align" id="create_character">
+                <form action="/market/" method="post">
+                    {% csrf_token %}
+                    <div class="row valign-wrapper">
+                        <div class="col s4 flow-text">{{ n.get_obj_type_display }}</div>
+                        <div class="col s4 flow-text">{{ n.character.name }}</div>
+                        <div class="col s2 offset-s2 flow-text">{{ n.quantity_sell }}</div>
+                        <div class="col s2">
+                            <input id="nb" name="nb" type="number" min="1" max="{{ n.quantity_sell }}"/>
+                            <button class="btn waves-effect waves-light" type="submit" name="obj" value="{{ n.id }}">Acheter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

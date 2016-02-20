@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 
+OBJECT_CHOICES = (
+    (1, 'food'),
+    (2, 'bandage')
+)
+
 class Role(models.Model):
     name = models.CharField(max_length=50)
     first_stat = models.CharField(max_length=50)
@@ -30,7 +35,7 @@ class Territory(models.Model):
         
     def save(self, *args, **kwargs):
         super(Syndicat, self).save(*args, **kwargs)
-
+    
 class Syndicat(models.Model):
     name = models.CharField(max_length=50)
     banque = models.DateTimeField(default=datetime.now())
@@ -73,6 +78,21 @@ class Character(models.Model):
 
     def save(self, *args, **kwargs):
         super(Character, self).save(*args, **kwargs)
+
+        
+class Object(models.Model):
+    damage = models.IntegerField(default=0)
+    price = models.IntegerField(default=0)
+    count = models.IntegerField(default=0)
+    quantity_sell = models.IntegerField(default=0)
+    obj_type = models.IntegerField(choices=OBJECT_CHOICES)
+    character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name="object", null=True, blank=True)
+    
+    def __str__(self):
+        return str(self.obj_type)
+
+    def save(self, *args, **kwargs):
+        super(Object, self).save(*args, **kwargs)
 
 # Create your models here.
 

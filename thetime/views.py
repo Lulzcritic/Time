@@ -12,9 +12,12 @@ from forms import SelectSyndicatForm
 from forms import SyndicatDashboardForm
 from forms import SelectRoleForm
 from forms import WorkPageForm
+from forms import MarketForm
+from forms import SellForm
 from models import Character
 from models import Syndicat
 from models import Role
+from models import Object
 from numpy import int32
 from datetime import datetime, timedelta
 import time
@@ -39,6 +42,11 @@ class RegisterView(FormView):
     form_class = RegisterForm
 
     def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated() == True:
+            return HttpResponseRedirect('/')
+        if hasattr(user, 'character') == True:
+            return HttpResponseRedirect('/')
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         context = self.get_context_data(**kwargs)
@@ -63,6 +71,9 @@ class ConnexionView(FormView):
     form_class = ConnexionForm
 
     def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated() == True:
+            return HttpResponseRedirect('/')
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         context = self.get_context_data(**kwargs)
@@ -107,6 +118,8 @@ class CharacterCreateView(FormView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
         if hasattr(user, 'character') == True:
             return HttpResponseRedirect('/dashboard')
         form_class = self.get_form_class()
@@ -122,6 +135,12 @@ class CharacterCreateView(FormView):
             user = request.user
             character = Character(user=user, name=request.POST['name'], gender=request.POST['gender'])
             character.save()
+            food = Object(obj_type=1)
+            food.character = character
+            food.save()
+            bandage = Object(obj_type=2)
+            bandage.character = character
+            bandage.save()
             return HttpResponseRedirect('/')
             return self.form_valid(form, **kwargs)
         else:
@@ -132,6 +151,8 @@ class AddTimeView(View):
     
     def get(self, request, *args, **kwargs):
         user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
         if hasattr(user, 'character') == False:
             return HttpResponseRedirect('/')
         character = Character.objects.get(name=user.character.name)
@@ -185,24 +206,49 @@ class AddTimeView(View):
                 character.social = character.social + 1
         if character.role_exp >= 12:
                 character.role_exp = 0
+        if character.role == "fermier":
+            obj = Object.objects.get(character=character, obj_type=1)
+            obj.count = obj.count + character.pay
+            obj.save()
         character.pay = character.pay * role.pay + ((role.pay * 16 / 100) * stat1) + ((role.pay * 6 / 100) * stat2)
         character.time = character.time.replace(tzinfo=None) + timedelta(minutes = character.pay)
         character.role_bool = False
         character.save()
         return HttpResponseRedirect('/dashboard')
 
+class DieView(View):
+    template_name = 'templates/die.html'
+    
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
+        if hasattr(user, 'character') == False:
+            return HttpResponseRedirect('/')
+        if user.character.state != "DEAD":
+            return HttpResponseRedirect('/')
+        character = Character.objects.get(name=user.character.name)
+        character.delete()
+        context = {}
+        return render(request, self.template_name, context)
+
 class DashboardView(View):
     template_name = 'templates/dashboard.html'
     
     def get(self, request, *args, **kwargs):
         user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
         if hasattr(user, 'character') == False:
             return HttpResponseRedirect('/')
+        character = Character.objects.get(name=user.character.name)
         if user.character.time.replace(tzinfo=None) > datetime.now().replace(tzinfo=None):
             time = user.character.time.replace(tzinfo=None) - datetime.now().replace(tzinfo=None)
             time = str(time.days) + " jours " + str(time.seconds//3600) + " heures " + str(time.seconds//60%60) + " minutes " + str(time.seconds%60) + " secondes "
         else:
-            time = "DEAD"
+            character.state = "DEAD"
+            character.save()
+            return HttpResponseRedirect('/die')
         if user.character.role_bool == True:
             if user.character.d_pending.replace(tzinfo=None) > datetime.now().replace(tzinfo=None):
                 pending = user.character.d_pending.replace(tzinfo=None) - datetime.now().replace(tzinfo=None)
@@ -211,7 +257,6 @@ class DashboardView(View):
                 pending = "PAYDAY"
         else:
             pending = "Aucun"
-        character = Character.objects.get(name=user.character.name)
         if (character.hungry.replace(tzinfo=None) - datetime.now().replace(tzinfo=None)) > timedelta(days=1):
             character.state = "Faim"
             character.save()
@@ -236,6 +281,10 @@ class CreateSyndicatView(FormView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
+        if hasattr(user, 'character') == False:
+            return HttpResponseRedirect('/')
         if user.character.syndicat != None or user.character.role != "Rien":
             return HttpResponseRedirect('/dashboard')
         form_class = self.get_form_class()
@@ -266,6 +315,10 @@ class SelectSyndicatView(FormView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
+        if hasattr(user, 'character') == False:
+            return HttpResponseRedirect('/')
         context = {}
         if user.character.syndicat != None:
             return HttpResponseRedirect('/dashboard')
@@ -294,11 +347,21 @@ class SyndicatDashboardView(FormView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
+        if hasattr(user, 'character') == False:
+            return HttpResponseRedirect('/')
         syndicat = Syndicat.objects.get(name=user.character.syndicat)
         if user.character.syndicat == None:
             return HttpResponseRedirect('/dashboard')
+        if syndicat.banque.replace(tzinfo=None) > datetime.now().replace(tzinfo=None):
+            time = syndicat.banque.replace(tzinfo=None) - datetime.now().replace(tzinfo=None)
+            time = str(time.days) + " jours " + str(time.seconds//3600) + " heures " + str(time.seconds//60%60) + " minutes " + str(time.seconds%60) + " secondes "
+        else:
+            time = str(0) + " jours " + str(0) + " heures " + str(0) + " minutes " + str(0) + " secondes "
         context = {}
         context['syndicat'] = syndicat
+        context['time'] = time
         return render(request, self.template_name, context)
         
     def post(self, request, *args, **kwargs):
@@ -323,11 +386,17 @@ class WorkPageView(FormView):
     
     def get(self, request, *args, **kwargs):
         user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
+        if hasattr(user, 'character') == False:
+            return HttpResponseRedirect('/')
         context = {}
         if user.character.state != "Aucun":
             return HttpResponseRedirect('/dashboard')
         if user.character.role == "Rien":
             return HttpResponseRedirect('/dashboard')
+        if user.character.role == "President":
+            return HttpResponseRedirect('/dashboard_syndicat')
         context["character"] = user.character
         return render(request, self.template_name, context)
         
@@ -341,6 +410,7 @@ class WorkPageView(FormView):
             if int(request.POST['hour']) == -2:
                 character.role_bool = False
                 character.role = "Rien"
+                character.role_exp = 0
                 character.save()
                 return HttpResponseRedirect('/dashboard')
             if character.role_bool == True:
@@ -363,14 +433,16 @@ class SelectRoleView(FormView):
 
     def get(self, request, *args, **kwargs):
         user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
         context = {}
+        if hasattr(user, 'character') == False:
+            return HttpResponseRedirect('/')
         if user.character.state != "Aucun":
             return HttpResponseRedirect('/dashboard')
         if user.character.role != "Rien":
             return HttpResponseRedirect('/workpage')
         context["stat_role"] = ["stamina", "intelligence", "strength", "social", "observation"]
-        context["stat_charaEERE"] = [user.character.stamina, user.character.intelligence, user.character.strength, user.character.social, user.character.observation]
-        #context["stat_chara"] = [user.character.stamina, user.character.intelligence, user.character.strength, user.character.social, user.character.observation]
         context["stat_chara"] = [("stamina", user.character.stamina), ("intelligence", user.character.intelligence), ("strength", user.character.strength), ("social", user.character.social), ("observation", user.character.observation)]
         context["role"] = Role.objects.all()
         return render(request, self.template_name, context)
@@ -388,3 +460,99 @@ class SelectRoleView(FormView):
             return self.form_valid(form, **kwargs)
         else:
             return self.form_invalid(form, **kwargs)
+            
+class MarketView(FormView):
+    template_name = 'templates/market.html'
+    form_class = MarketForm
+    
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
+        if hasattr(user, 'character') == False:
+            return HttpResponseRedirect('/')
+        if user.character.state != "Aucun":
+            return HttpResponseRedirect('/dashboard')
+        context = {}
+        context['objet'] = Object.objects.all().exclude(quantity_sell=0)
+        return render(request, self.template_name, context)
+        
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            user = request.user
+            character = Character.objects.get(name=user.character.name)
+            obj_seller = Object.objects.get(id=int(request.POST['obj']))
+            obj_buyer = Object.objects.get(character=character, obj_type=obj_seller.obj_type)
+            seller = Character.objects.get(name=obj_seller.character.name)
+            obj_seller.quantity_sell = obj_seller.quantity_sell - int(request.POST['nb'])
+            obj_buyer.count = obj_buyer.count + int(request.POST['nb'])
+            price = int(request.POST['nb']) * obj_seller.price
+            if seller.syndicat != None:
+                syndicat = Syndicat.objects.get(name=seller.syndicat.name)
+                percent = price * 25 / 100
+                price = price - percent
+                if syndicat.banque.replace(tzinfo=None) > datetime.now().replace(tzinfo=None):
+                    syndicat.banque = syndicat.banque.replace(tzinfo=None) + timedelta(minutes=percent)
+                else:
+                    syndicat.banque = datetime.now().replace(tzinfo=None) + timedelta(minutes=percent)
+                syndicat.save()
+            character.time = character.time.replace(tzinfo=None) - timedelta(minutes=price)
+            character.save()
+            seller.time = seller.time.replace(tzinfo=None) + timedelta(minutes=price)
+            seller.save()
+            obj_buyer.save()
+            obj_seller.save()
+            return HttpResponseRedirect('/dashboard')
+            return self.form_valid(form, **kwargs)
+        else:
+            return self.form_invalid(form, **kwargs)
+            
+class SellView(FormView):
+    template_name = 'templates/market_sell.html'
+    form_class = SellForm
+    
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
+        if hasattr(user, 'character') == False:
+            return HttpResponseRedirect('/')
+        if user.character.state != "Aucun":
+            return HttpResponseRedirect('/dashboard')
+        objet = Object.objects.all().filter(character=user.character)
+        context = {}
+        context['sell_objet'] = objet.exclude(count=0)
+        return render(request, self.template_name, context)
+        
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            user = request.user
+            character = Character.objects.get(name=user.character.name)
+            obj = Object.objects.get(character=character,obj_type=int(request.POST['obj']))
+            obj.count = obj.count - int(request.POST['nb'])
+            obj.quantity_sell = obj.quantity_sell + int(request.POST['nb'])
+            obj.price = int(request.POST['price'])
+            obj.save()
+            return HttpResponseRedirect('/dashboard')
+            return self.form_valid(form, **kwargs)
+        else:
+            return self.form_invalid(form, **kwargs)
+            
+class InventoryView(View):
+    template_name = 'templates/inventory.html'
+    
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated() == False:
+            return HttpResponseRedirect('/')
+        if hasattr(user, 'character') == False:
+            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/dashboard')
+        objet = Object.objects.all().filter(character=user.character)
+        context = {}
+        context['objet'] = objet.exclude(count=0)
+        return render(request, self.template_name, context)

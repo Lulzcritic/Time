@@ -1,0 +1,24 @@
+{% extends 'templates/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+    <h1 class="white-text center-align">Market</h1>
+    {% for n in sell_objet %}
+    <div class="col s2">
+        <div class="card-panel teal blue-grey lighten-5 center-align" id="create_character">
+            <form action="/market_sell/" method="post">
+                {% csrf_token %}
+                <div class="register_label">{{ n.get_obj_type_display }}</div>
+                <input id="nb" name="nb" type="number" min="1" max="{{ n.count }}"/>
+                <input id="price" name="price" type="number" min="1"/>
+            <button class="btn waves-effect waves-light" type="submit" name="obj" value="{{ n }}">Vendre</button>
+            </form>
+    </div>
+    </div>
+    {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
