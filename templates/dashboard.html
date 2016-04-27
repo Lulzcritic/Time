@@ -7,7 +7,7 @@
         <div class="col s8">
             <div class="card teal blue-grey darken-5">
                 <div class="card-content white-text">
-                    <p class="center-align">{{ time }} / inventaire/ {{ etat }}</p>
+                    <p class="center-align">{{ time }} / {{ etat }}</p>
                 </div>
             </div>
         </div>
@@ -163,7 +163,22 @@
                     </div>
                 </div>
             </div>
-            
+        </div>
+        
+        <div class="col s8">
+            <div class="card-panel grey lighten-5 z-depth-1">
+                    <div class="row valign-wrapper">
+
+                        <div class="col s12">
+                            <span class="black-text">
+                                <center><h5 class="flow-text">Mon inventaire</h5><br>
+                                <p class="flow-text">{{ objet }} Objets en stock</p>
+                                <a href="https://time-project-d3falt.c9users.io/inventory" class="btn waves-effect waves-light">Accéder</a>
+                                </center>
+                            </span>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
 </div>

@@ -260,7 +260,13 @@ class DashboardView(View):
         if (character.hungry.replace(tzinfo=None) - datetime.now().replace(tzinfo=None)) > timedelta(days=1):
             character.state = "Faim"
             character.save()
+        nobjet = 0
+        objet = Object.objects.all().filter(character=character)
+        n = 0
+        for n in objet:
+            nobjet += n.count
         context = {}
+        context["objet"] = nobjet
         context["role"] = user.character.role
         context["pending"] = pending
         context["time"] = time;

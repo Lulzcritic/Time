@@ -4,7 +4,12 @@ from datetime import datetime, timedelta
 
 OBJECT_CHOICES = (
     (1, 'food'),
-    (2, 'bandage')
+    (2, 'bandage'),
+    (3, 'alimentary'),
+    (4, 'chimical'),
+    (5, 'oil'),
+    (6, 'electronic'),
+    (7, 'Scrap')
 )
 
 class Role(models.Model):
@@ -23,7 +28,7 @@ class Role(models.Model):
 
 class Territory(models.Model):
     name = models.CharField(max_length=50)
-    ressource_type = models.CharField(max_length=50)
+    ressource_type = models.IntegerField(choices=OBJECT_CHOICES)
     stock = models.IntegerField(default=1000)
     factory = models.BooleanField(default=False)
     level_factory = models.IntegerField(default=0)
@@ -34,7 +39,7 @@ class Territory(models.Model):
         return self.name
         
     def save(self, *args, **kwargs):
-        super(Syndicat, self).save(*args, **kwargs)
+        super(Territory, self).save(*args, **kwargs)
     
 class Syndicat(models.Model):
     name = models.CharField(max_length=50)
@@ -87,7 +92,8 @@ class Object(models.Model):
     quantity_sell = models.IntegerField(default=0)
     obj_type = models.IntegerField(choices=OBJECT_CHOICES)
     character = models.ForeignKey(Character, on_delete=models.CASCADE, related_name="object", null=True, blank=True)
-    
+    syndicat = models.ForeignKey(Syndicat, on_delete=models.CASCADE, related_name="ressource", null=True, blank=True)
+
     def __str__(self):
         return str(self.obj_type)
 
